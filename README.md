@@ -17,6 +17,14 @@ EasyRTMP是[EasyDarwin开源社区](https://www.easydarwin.org "EasyDarwin")开�
 
 ## 调用示例 ##
 
+- EasyRTMP Windows：读取文件或者网络流，推送到RTMP服务器
+		
+		//-m: 拉流模式，TCP或者UDP
+		//-d: 输入源地址，流地址或者文件地址
+		//-s: 输出方式，rtmp代表RTMP推流出去
+		//-f: 输出地址，RTMP推流地址
+		./easyrtmp_demo.exe -m tcp -d rtsp://192.168.1.100/ch1 -s rtmp -f rtmp://127.0.0.1:10035/hls/ch1 -t 30
+
 - EasyRTMP Android：支持前/后摄像头直播、安卓屏幕直播
 
 	[https://fir.im/easyrtmp](https://fir.im/easyrtmp "https://fir.im/easyrtmp")
