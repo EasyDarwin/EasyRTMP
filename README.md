@@ -13,7 +13,7 @@ EasyRTMP是[EasyDarwin开源社区](https://www.easydarwin.org "EasyDarwin")开�
 
 ## 调用过程 ##
 
-![EasyRTMP](https://pvale.com/share/image/EasyRTMP.png)
+![EasyRTMP](https://pvale.com/share/image/EasyRTMP.gif)
 
 
 ## 调用示例 ##
