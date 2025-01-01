@@ -1,3 +1,9 @@
+/*
+Copyright (c) 2012-2025 EasyDarwin.org.  All rights reserved.
+Github: https://github.com/EasyDarwin
+WEChat: EasyDarwin
+Website: http://www.easydarwin.org
+*/
 #define _CRTDBG_MAP_ALLOC
 #include <stdio.h>
 
@@ -16,16 +22,19 @@
 #include <list>
 #include "SpsDecode.h"
 
+//引用EasyStreamClient读取各种视频源，例如本地文件源或者网络视频源
+//引用EasyRTMP将读取到的视频源推流出去
 #ifdef _WIN32
 #pragma comment(lib,"libEasyRTMP.lib")
 #pragma comment(lib,"libEasyStreamClient.lib")
 #endif
 
+//最大视频源地址长度
 #ifndef MAX_PATH
 #define MAX_PATH 260
 #endif
 
-
+//最大RTMP推流地址长度
 #define MAX_RTMP_URL_LEN 256
 
 typedef struct __EASY_CLIENT_OBJ_T
@@ -49,7 +58,7 @@ typedef struct __EASY_CLIENT_OBJ_T
 	FILE* fAudioOut;
 }EASY_CLIENT_OBJ_T;
 
-
+//EasyRTMP推流状态回调，可以基于这些状态回调做相应的处理，例如重连推流或者停止推流
 int __EasyRTMP_Callback(int _frameType, char* pBuf, EASY_RTMP_STATE_T _state, void* _userPtr)
 {
 	switch (_state)
@@ -70,7 +79,6 @@ int __EasyRTMP_Callback(int _frameType, char* pBuf, EASY_RTMP_STATE_T _state, vo
 		printf("EasyRTMP Disconnect...\n");
 		break;
 	}
-
 	return 0;
 }
 
@@ -112,6 +120,8 @@ static int readFile(const char* _fileName, void* _buf, int _bufLen)
 	return 0;
 }
 
+//EasyStreamClient读取文件源或者网络视频源的回调
+//在此回调中处理读取到的音视频数据，调用EasyRTMP相应接口做Connect、Metadata、PushFrame或者Stop
 int Easy_APICALL __EasyStreamClientCallBack(void* channelPtr, int frameType, void* pBuf, EASY_FRAME_INFO* frameInfo)
 {
 	Easy_Bool bRet = 0;
@@ -120,12 +130,6 @@ int Easy_APICALL __EasyStreamClientCallBack(void* channelPtr, int frameType, voi
 
 	if (frameType == EASY_SDK_VIDEO_FRAME_FLAG || frameType == EASY_SDK_AUDIO_FRAME_FLAG)
 	{
-		if (frameInfo && frameInfo->length && frameType == EASY_SDK_AUDIO_FRAME_FLAG)
-		{
-
-		}
-
-
 		if (pEasyClient->logLevel >= 1)
 		{
 #if 1
@@ -148,15 +152,11 @@ int Easy_APICALL __EasyStreamClientCallBack(void* channelPtr, int frameType, voi
 			if (frameInfo->type == EASY_SDK_VIDEO_FRAME_I)
 			{
 				pEasyClient->GOP = pEasyClient->gopTotal;
-				pEasyClient->gopTotal = 1;
-
-				//printf("Keyframe ...\n");
-			}
+				pEasyClient->gopTotal = 1;			}
 			else
 			{
 				pEasyClient->gopTotal++;
 			}
-
 
 			if (NULL == pEasyClient->fVideoOut && 0 == strncmp(pEasyClient->szOutputFormat, "file", 4))
 			{
@@ -182,7 +182,6 @@ int Easy_APICALL __EasyStreamClientCallBack(void* channelPtr, int frameType, voi
 			{
 				fwrite(pBuf, 1, frameInfo->length, pEasyClient->fVideoOut);
 				fflush(pEasyClient->fVideoOut);
-
 			}
 		}
 		else if (frameInfo && frameInfo->length && frameType == EASY_SDK_AUDIO_FRAME_FLAG)
@@ -300,6 +299,7 @@ int Easy_APICALL __EasyStreamClientCallBack(void* channelPtr, int frameType, voi
 							update = true;
 						}
 
+						//当视频参数有变化的时候，必须通过InitMetaData的方式重刷推流信息
 						if (update)
 						{
 							iRet = EasyRTMP_InitMetadata(pEasyClient->pusherHandle, &pEasyClient->mediainfo, 1024);
@@ -373,7 +373,7 @@ int Easy_APICALL __EasyStreamClientCallBack(void* channelPtr, int frameType, voi
 			}
 		}
 	}
-	else if (frameType == EASY_SDK_MEDIA_INFO_FLAG)//回调出媒体信息
+	else if (frameType == EASY_SDK_MEDIA_INFO_FLAG)//EasyStreamClient回调出了视频源的媒体信息
 	{
 		//if(pBuf != NULL)
 		//{
@@ -403,7 +403,6 @@ int Easy_APICALL __EasyStreamClientCallBack(void* channelPtr, int frameType, voi
 				printf("Fail to InitMetadata ...\n");
 			}
 		}
-
 		priorCodecId = pEasyClient->mediainfo.u32VideoCodec;
 	}
 	else if (frameType == EASY_SDK_EVENT_FRAME_FLAG)
@@ -438,8 +437,6 @@ int Easy_APICALL __EasyStreamClientCallBack(void* channelPtr, int frameType, voi
 	return 0;
 }
 
-
-
 int Easy_APICALL __EasyDownloadCallBack(void* userptr, const char* path)
 {
 	if (path)
@@ -469,7 +466,7 @@ int PrintPrompt(char const* progName)
 }
 
 
-//-m tcp -d rtsp://192.168.1.100/ch1 -s rtmp -f rtmp://127.0.0.1:10035/hls/ch1 -t 30
+//easyrtmp -m tcp -d rtsp://192.168.1.100/ch1 -s rtmp -f rtmp://127.0.0.1:10035/hls/ch1 -t 30
 int main(int argc, char* argv[])
 {
 	int size = 338;
@@ -489,8 +486,7 @@ int main(int argc, char* argv[])
 		return 0;
 	}
 
-
-	EASY_CLIENT_OBJ_T		easyClientObj;
+	EASY_CLIENT_OBJ_T easyClientObj;
 	memset(&easyClientObj, 0x00, sizeof(EASY_CLIENT_OBJ_T));
 
 	easyClientObj.connectType = EASY_RTP_OVER_TCP;
@@ -579,7 +575,6 @@ int main(int argc, char* argv[])
 
 	EasyStreamClient_SetCallback(easyClientObj.streamClientHandle, __EasyStreamClientCallBack);
 
-
 	EasyStreamClient_OpenStream(easyClientObj.streamClientHandle, easyClientObj.szURL, easyClientObj.connectType, (void*)&easyClientObj, 1000, easyClientObj.nTimeout, 1);
 
 	printf("按回车键退出...\n");
@@ -599,4 +594,3 @@ int main(int argc, char* argv[])
 
 	return 0;
 }
-
