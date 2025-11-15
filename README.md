@@ -5,11 +5,15 @@ EasyRTMP是[EasyDarwin流媒体音视频技术社区](https://www.easydarwin.org
 
 ### 编译方法 ###
 
-	Windows平台采用Visual Studio编译sln
+- Windows编译方法：
 
-	Linux下执行Builtit文件编译,具体如下：
-	chmod +x Builtit
-	./Builtit
+		Visual Studio打开sln
+
+
+- Linux编译方法：
+
+		chmod +x Builtit
+		./Builtit
 		
 
 ## 调用过程 ##
