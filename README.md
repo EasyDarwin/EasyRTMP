@@ -9,6 +9,7 @@ EasyRTMP是[EasyDarwin开源社区](https://www.easydarwin.org "EasyDarwin")开�
 
 	Linux下执行Builtit文件编译,具体如下：
 	chmod +x Builtit
+	./Builtit
 		
 
 ## 调用过程 ##
@@ -28,7 +29,7 @@ EasyRTMP是[EasyDarwin开源社区](https://www.easydarwin.org "EasyDarwin")开�
 
 - EasyRTMP Android：支持前/后摄像头直播、安卓屏幕直播
 
-	[https://fir.im/easyrtmp](https://fir.im/easyrtmp "https://fir.im/easyrtmp")
+	[http://app.tsingsee.com/easyrtmp](http://app.tsingsee.com/easyrtmp "http://app.tsingsee.com/easyrtmp")
 
 
 - EasyRTMP iOS：支持前/后摄像头直播
