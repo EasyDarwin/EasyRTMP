@@ -14,7 +14,7 @@ EasyRTMP是[EasyDarwin开源社区](https://www.easydarwin.org "EasyDarwin")开�
 
 ## 调用过程 ##
 
-![EasyRTMP](https://pvale.com/share/image/EasyRTMP.gif)
+![EasyRTMP](https://www.easydarwin.com/images/EasyRTMP/EasyRTMP_Flow.gif)
 
 
 ## 调用示例 ##
